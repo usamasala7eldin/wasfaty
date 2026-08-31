@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>Wasfaty Service Executive Report</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f3f4f6;
+    margin: 0;
+    padding: 32px 16px;
+    color: #1f2937;
+  }
+  .sheet {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  /* ---------- PAGE 1 : FORM ---------- */
+  #page1 .form-header {
+    background: #0b1f3a;
+    color: #fff;
+    padding: 22px 28px;
+  }
+  #page1 .form-header h1 { margin: 0 0 4px 0; font-size: 20px; }
+  #page1 .form-header p { margin: 0; font-size: 13px; color: #cbd5e1; }
+  .form-body { padding: 24px 28px; }
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 18px;
+  }
+  .field { display: flex; flex-direction: column; }
+  .field.full { grid-column: 1 / -1; }
+  .field label {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #6b7280;
+    letter-spacing: 0.3px;
+    margin-bottom: 5px;
+  }
+  .field input, .field textarea {
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    padding: 9px 10px;
+    font-size: 13.5px;
+    font-family: inherit;
+    color: #111827;
+  }
+  .field input:focus, .field textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px #dbe6fd;
+  }
+  .divider {
+    grid-column: 1 / -1;
+    font-size: 13px;
+    font-weight: 700;
+    color: #111827;
+    border-left: 4px solid #2563eb;
+    padding-left: 10px;
+    margin: 10px 0 2px 0;
+  }
+  .metrics-row {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 10px;
+    align-items: end;
+  }
+  .metrics-row .metric-name { font-size: 13px; padding-top: 8px; color: #374151; font-weight: 600; }
+
+  .submit-row { grid-column: 1 / -1; margin-top: 10px; text-align: center; }
+  .btn {
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    padding: 11px 28px;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .btn:hover { background: #1d4ed8; }
+  .btn.secondary {
+    background: #fff;
+    color: #2563eb;
+    border: 1px solid #2563eb;
+  }
+  .btn.secondary:hover { background: #eff4ff; }
+
+  /* ---------- PAGE 2 : REPORT ---------- */
+  #page2 { display: none; }
+  .header {
+    background: #0b1f3a;
+    color: #ffffff;
+    padding: 22px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .header h1 { margin: 0 0 4px 0; font-size: 20px; letter-spacing: 0.3px; }
+  .header p { margin: 0; font-size: 13px; color: #cbd5e1; }
+  .pharmacy-code {
+    background: #16305c;
+    border: 1px solid #2b4d85;
+    color: #a9c6ff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .info-bar {
+    background: #f8fafc;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 16px 28px;
+  }
+  .info-item { flex: 1 1 200px; padding: 4px 12px; }
+  .info-item .label {
+    font-size: 11px; font-weight: 700; color: #6b7280;
+    letter-spacing: 0.4px; margin-bottom: 4px;
+  }
+  .info-item .value { font-size: 14px; font-weight: 600; color: #111827; }
+  .info-item.hours .value { color: #2563eb; }
+
+  .section { padding: 22px 28px 6px 28px; }
+  .section-title {
+    font-size: 14px; font-weight: 700; color: #111827;
+    border-left: 4px solid #2563eb; padding-left: 10px; margin: 0 0 14px 0;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th {
+    text-align: left; background: #f8fafc; color: #6b7280;
+    font-size: 11px; letter-spacing: 0.4px; padding: 10px 12px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  thead th:not(:first-child) { text-align: center; }
+  tbody td { padding: 12px; border-bottom: 1px solid #f1f5f9; color: #1f2937; }
+  tbody td:not(:first-child) { text-align: center; }
+  tbody tr:first-child td { font-weight: 700; }
+  .pill {
+    display: inline-block; min-width: 26px; padding: 2px 8px;
+    border-radius: 10px; font-weight: 700; font-size: 12px;
+  }
+  .pill.blue  { background: #e8f0ff; color: #2563eb; }
+  .pill.green { background: #e7f8ef; color: #16a34a; }
+  .pill.gray  { background: #eef1f5; color: #475569; }
+  .pill.red   { background: #fdeaea; color: #dc2626; }
+
+  .note {
+    margin: 16px 28px 6px 28px; background: #fff8e6; border-left: 4px solid #e8a33d;
+    padding: 10px 14px; font-size: 12.5px; color: #7a5312; border-radius: 3px;
+  }
+  .note b { color: #7a5312; }
+
+  .photo-box {
+    margin: 6px 28px 22px 28px; border: 1px solid #e5e7eb; border-radius: 6px;
+    padding: 18px; text-align: center;
+  }
+  .photo-box img { max-width: 260px; width: 100%; border-radius: 4px; }
+  .photo-box .placeholder {
+    max-width: 260px; height: 200px; margin: 0 auto; background: #f1f5f9;
+    border: 1px dashed #cbd5e1; border-radius: 4px; display: flex;
+    align-items: center; justify-content: center; color: #94a3b8; font-size: 12px;
+  }
+  .caption { margin-top: 10px; font-size: 12px; font-style: italic; color: #6b7280; }
+
+  .footer {
+    display: flex; justify-content: space-between; padding: 22px 28px 30px 28px;
+    border-top: 1px solid #e5e7eb; font-size: 12.5px;
+  }
+  .footer .line { border-top: 1px solid #9ca3af; width: 220px; margin-top: 34px; padding-top: 6px; }
+  .footer .name { font-weight: 700; color: #111827; }
+  .footer .right { text-align: right; }
+
+  .back-row { padding: 0 28px 24px 28px; text-align: center; }
+</style>
+</head>
+<body>
+
+  <!-- ================= PAGE 1 : FORM ================= -->
+  <div class="sheet" id="page1">
+    <div class="form-header">
+      <h1>WASFATY SERVICE EXECUTIVE REPORT</h1>
+      <p>أدخل البيانات ثم اضغط "إنشاء التقرير"</p>
+    </div>
+    <div class="form-body">
+      <div class="form-grid">
+        <div class="field">
+          <label>PHARMACY NAME</label>
+          <input id="in-pharmacyName" value="Al-Nazim Pharmacy – East Riyadh">
+        </div>
+        <div class="field">
+          <label>PHARMACY CODE</label>
+          <input id="in-pharmacyCode" value="9229">
+        </div>
+        <div class="field">
+          <label>VM NAME</label>
+          <input id="in-vmName" value="Anwar Alanazi">
+        </div>
+        <div class="field">
+          <label>EMPLOYEE ID</label>
+          <input id="in-empId" value="12933">
+        </div>
+        <div class="field">
+          <label>DAY & DATE</label>
+          <input id="in-date" value="Monday, 31/08/2026">
+        </div>
+        <div class="field">
+          <label>WORKING HOURS</label>
+          <input id="in-hours" value="08:00 AM – 05:00 PM">
+        </div>
+
+        <div class="divider">PERFORMANCE METRICS</div>
+        <div class="metrics-row">
+          <div class="metric-name">All Wasfaty Service Requesters (Total)</div>
+          <input id="in-total" type="number" value="41">
+        </div>
+        <div class="metrics-row">
+          <div class="metric-name">Already subscribed</div>
+          <input id="in-subscribed" type="number" value="29">
+        </div>
+        <div class="metrics-row">
+          <div class="metric-name">New subscribers</div>
+          <input id="in-new" type="number" value="8">
+        </div>
+        <div class="metrics-row">
+          <div class="metric-name">Refused guests</div>
+          <input id="in-refused" type="number" value="4">
+        </div>
+
+        <div class="divider">SIGNATURE</div>
+        <div class="field">
+          <label>PREPARED BY (NAME)</label>
+          <input id="in-preparedName" value="Anwar Alanazi (VM)">
+        </div>
+        <div class="field">
+          <label>PREPARED BY (ID)</label>
+          <input id="in-preparedId" value="12933">
+        </div>
+
+        <div class="submit-row">
+          <button class="btn" onclick="generateReport()">إنشاء التقرير ←</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= PAGE 2 : REPORT ================= -->
+  <div class="sheet" id="page2">
+    <div class="header">
+      <div>
+        <h1>WASFATY SERVICE EXECUTIVE REPORT</h1>
+        <p id="out-pharmacyName">Al-Nazim Pharmacy – East Riyadh</p>
+      </div>
+      <div class="pharmacy-code">Pharmacy Code: <span id="out-pharmacyCode">9229</span></div>
+    </div>
+
+    <div class="info-bar">
+      <div class="info-item">
+        <div class="label">VM NAME</div>
+        <div class="value" id="out-vmName">Anwar Alanazi</div>
+      </div>
+      <div class="info-item">
+        <div class="label">EMPLOYEE ID</div>
+        <div class="value" id="out-empId">12933</div>
+      </div>
+      <div class="info-item">
+        <div class="label">DAY &amp; DATE</div>
+        <div class="value" id="out-date">Monday, 31/08/2026</div>
+      </div>
+      <div class="info-item hours">
+        <div class="label">WORKING HOURS</div>
+        <div class="value" id="out-hours">08:00 AM – 05:00 PM</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">PERFORMANCE METRICS ANALYSIS</div>
+      <table>
+        <thead>
+          <tr><th>PERFORMANCE METRIC</th><th>COUNT</th><th>PERCENTAGE</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>All Wasfaty Service Requesters</td>
+            <td><span class="pill blue" id="out-total">41</span></td>
+            <td>100%</td>
+          </tr>
+          <tr>
+            <td>Already subscribed</td>
+            <td><span class="pill green" id="out-subscribed">29</span></td>
+            <td id="out-pctSubscribed">70.7%</td>
+          </tr>
+          <tr>
+            <td>New subscribers</td>
+            <td><span class="pill gray" id="out-new">8</span></td>
+            <td id="out-pctNew">19.5%</td>
+          </tr>
+          <tr>
+            <td>Refused guests</td>
+            <td><span class="pill red" id="out-refused">4</span></td>
+            <td id="out-pctRefused">9.8%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note">
+      <b>Note:</b> The above-mentioned figures relate exclusively to Wasfaty guests.
+    </div>
+
+    <div class="section">
+      <div class="section-title">VISUAL DOCUMENTATION</div>
+    </div>
+    <div class="photo-box">
+      <div class="placeholder">ضع الصورة هنا</div>
+      <div class="caption">Figure 1: Documented interaction with a Wasfaty service guest at the counter.</div>
+    </div>
+
+    <div class="footer">
+      <div>
+        Prepared By:
+        <div class="line">
+          <div class="name" id="out-preparedName">Anwar Alanazi (VM)</div>
+          <div>ID: <span id="out-preparedId">12933</span></div>
+        </div>
+      </div>
+      <div class="right">
+        Management Review:
+        <div class="line">Signature / Stamp</div>
+      </div>
+    </div>
+
+    <div class="back-row">
+      <button class="btn secondary" onclick="goBack()">→ تعديل البيانات</button>
+    </div>
+  </div>
+
+<script>
+function val(id) { return document.getElementById(id).value; }
+
+function generateReport() {
+  document.getElementById('out-pharmacyName').textContent = val('in-pharmacyName');
+  document.getElementById('out-pharmacyCode').textContent = val('in-pharmacyCode');
+  document.getElementById('out-vmName').textContent = val('in-vmName');
+  document.getElementById('out-empId').textContent = val('in-empId');
+  document.getElementById('out-date').textContent = val('in-date');
+  document.getElementById('out-hours').textContent = val('in-hours');
+  document.getElementById('out-preparedName').textContent = val('in-preparedName');
+  document.getElementById('out-preparedId').textContent = val('in-preparedId');
+
+  const total = parseFloat(val('in-total')) || 0;
+  const subscribed = parseFloat(val('in-subscribed')) || 0;
+  const newSubs = parseFloat(val('in-new')) || 0;
+  const refused = parseFloat(val('in-refused')) || 0;
+
+  document.getElementById('out-total').textContent = total;
+  document.getElementById('out-subscribed').textContent = subscribed;
+  document.getElementById('out-new').textContent = newSubs;
+  document.getElementById('out-refused').textContent = refused;
+
+  const pct = (n) => total > 0 ? ((n / total) * 100).toFixed(1) + '%' : '0%';
+  document.getElementById('out-pctSubscribed').textContent = pct(subscribed);
+  document.getElementById('out-pctNew').textContent = pct(newSubs);
+  document.getElementById('out-pctRefused').textContent = pct(refused);
+
+  document.getElementById('page1').style.display = 'none';
+  document.getElementById('page2').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+function goBack() {
+  document.getElementById('page2').style.display = 'none';
+  document.getElementById('page1').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
